@@ -1,142 +1,83 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>mitigated.sbs</title>
-    <meta charset="UTF-8" />
-    <meta name="description" content="mitigated.sbs - hack vs hack pro" />
-    <meta
-      name="keywords"
-      content="mitigated.sbs, skit, club, counter-strike, csgo, hvh"
-    />
-    <meta name="author" content="your mom" />
-    <meta property="og:type" content="site" />
-    <meta property="og:title" content="mitigated.sbs" />
-    <meta
-      property="og:description"
-      content="mitigated.sbs - hack vs hack pro"
-    />
-    <meta property="og:url" content="https://mitigated.sbs/" />
-    <meta property="og:image" content="assets/icons/obnoxious.jpg" />
-    <meta itemprop="name" content="mitigated.sbs" />
-    <meta itemprop="description" content="mitigated.sbs - hack vs hack pro" />
-    <meta itemprop="image" content="assets/icons/obnoxious.jpg" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+<head>
+  <script>
+    // The name of the cookie where the challenge result is stored.
+    const COOKIE_NAME = "daddy-issues";
 
-    <link
-      rel="shortcut icon"
-      href="assets/icons/obnoxious.jpg"
-      type="image/x-icon"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="assets/stylesheets/stylesheet.css"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
-    />
-  </head>
+    // The secret key used to generate and verify the cookie value.
+    const SECRET_KEY = "gfdghdfh6465456gsdf";
 
-  <body>
-    <script type="text/javascript" src="assets/javascript/app.js"></script>
+    // A function that generates a random string of 32 characters.
+    function generateRandomString() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let result = "";
+      for (let i = 0; i < 32; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
 
-    <div id="main">
-      <table class="box">
-        <tbody>
-          <tr>
-            <td><span id="line1" style="white-space: pre;"></span></td>
-          </tr>
-          <tr>
-            <td><span id="line2" style="white-space: pre;"></span></td>
-          </tr>
-          <tr>
-            <td><span id="line3 space" style="white-space: pre;"></span></td>
-          </tr>
-          <tr>
-            <td><span id="line4" style="white-space: pre;"></span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    // A function that computes the SHA-256 hash of a string.
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      return hashHex;
+    }
 
-    <div class="container" style="display: none;">
-      <h1 class="brand-header">
-        <a href="https://e-z.bio/aimwareabuser" target="_BLANK"
-          >mitigated.sbs</a
-          
-        >
+    // A function that sets a cookie with a given name and value.
+    function setCookie(name, value) {
+      document.cookie = name + "=" + value + "; path=/";
+    }
 
+    // A function that verifies if a cookie value is valid by comparing it with the secret key.
+    function verifyCookie(cookie) {
+      // Split the cookie string by semicolons and find the one that starts with the cookie name.
+      const value = cookie.split(";").find((part) => part.trim().startsWith(`${COOKIE_NAME}=`));
 
-      </h1>
-        <a href="https://e-z.bio/aimwareabuser" target="_BLANK"><span    id="brand"></span></a>
-    </div>
+      // If the value exists, extract the hash from it and compare it with the secret key.
+      if (value) {
+        const hash = value.split("=")[1];
+        return hash === SECRET_KEY;
+      }
 
+      // If the value does not exist, return false.
+      return false;
+    }
 
+    // A function that handles requests to the main page and performs the cookie and JavaScript challenges.
+    async function handleRequest() {
+      // Get the cookie value from the document.cookie property.
+      const cookie = document.cookie;
 
-    <div class="background" style="display: none;">
-      <div id="pattern"></div>
+      // If the cookie exists and is valid, redirect to index2.html without changing the URL.
+      if (cookie && verifyCookie(cookie)) {
+        // Fetch the content of index2.html.
+        const response = await fetch("https://example.com/index2.html");
+        // Get the response text and set it as the document body innerHTML.
+        const text = await response.text();
+        document.body.innerHTML = text;
+        // Set the window location href to index.html without reloading the page.
+        window.history.replaceState(null, null, "index.html");
+      } else {
+        // If the cookie does not exist or is invalid, show the JavaScript challenge page with a new cookie.
 
-      <audio id="audio" loop="">
-        <source
-          src="sweet.mp4"
-          type="audio/mp4"
-        />
-        <script>
-          const audio = document.getElementById("audio");
+        // Generate a random string and compute its hash with the secret key.
+        const randomString = generateRandomString();
+        const hash = await sha256(randomString + SECRET_KEY);
 
-          app.audioElement = audio;
-          app.audioElement.volume = 0;
-        </script>
-      </audio>
+        // Set the cookie with the hash value and reload the page.
+        setCookie(COOKIE_NAME, hash);
+        window.location.reload();
+      }
+    }
 
-      <video id="background" loop="">
-        <source
-          src="sweet.mp4"
-          type="video/mp4"
-        />
-        <script>
-          const video = document.getElementById("background");
-
-          app.videoElement = video;
-          app.videoElement.volume = 0;
-        </script>
-      </video>
-    </div>
-
-    <div class="top-right">
-      <i><a class="skip">skip intro</a></i>
-    </div>
-
-
-
-    <script
-      type="text/javascript"
-      src="assets/javascript/lib/jquery-3.1.1.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="assets/javascript/lib/jquery.marquee.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="assets/javascript/lib/jquery.cookie.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="assets/javascript/lib/typed.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="assets/javascript/portfolio.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="assets/javascript/analytics.js"
-    ></script>
-  </body>
+    // Call the handleRequest function when the page loads.
+    window.addEventListener("load", handleRequest);
+  </script>
+</head>
+<body>
+  <p>Please wait while we verify your browser...</p>
+</body>
 </html>
