@@ -1,14 +1,10 @@
 var i=0;
 setInterval(function(){
     var titles=[
-"|i|",
-"|in|",
-"|inf|",
-"|infiniteco.de|",
-"|inf|",
-"|in|",
-"|i|",
-"||",
+"i have femboys in my basement",
+"primordial enjoyer",
+"never resolve user",
+"ur mom enjoyer"
 ]
 
     if(i===titles.length) {
